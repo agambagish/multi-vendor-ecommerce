@@ -1,5 +1,7 @@
+import { HeroCarousel } from "@/components/hero-carousel";
+
 export default function Page() {
   return (
-    <>Lorem ipsum dolor sit amet consectetur.</>
+    <HeroCarousel />
   );
 }
