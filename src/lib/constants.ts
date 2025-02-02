@@ -48,6 +48,18 @@ export const NAV_ITEMS: NavItem[] = [
       },
     ],
   },
+  {
+    title: "Sell",
+    href: "#",
+    responsiveClassName: "flex lg:hidden",
+    subItems: [
+      {
+        title: "Onboard as seller",
+        description: "Lorem ipsum dolor sit amet consectetur.",
+        href: "#",
+      },
+    ],
+  },
 ];
 
 export const CAROUSEL_ITEMS: CarouselItem[] = [

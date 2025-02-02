@@ -2,6 +2,7 @@ export interface NavItem {
   title: string;
   href: string;
   subItems: SubNavItem[];
+  responsiveClassName?: string;
 }
 
 export interface SubNavItem {

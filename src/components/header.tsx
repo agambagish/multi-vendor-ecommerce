@@ -1,6 +1,7 @@
 "use client";
 
-import { MenuIcon, StoreIcon } from "lucide-react";
+import { ClerkLoaded, ClerkLoading, SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
+import { Loader2, MenuIcon, StoreIcon } from "lucide-react";
 import Link from "next/link";
 import { useSelectedLayoutSegment } from "next/navigation";
 import { useState } from "react";
@@ -11,7 +12,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -40,7 +41,7 @@ export function Header() {
         <div className="hidden flex-row items-center justify-start gap-4 lg:flex">
           <NavigationMenu className="flex items-start justify-start">
             <NavigationMenuList className="flex flex-row justify-start gap-4">
-              {NAV_ITEMS.map(navItem => (
+              {NAV_ITEMS.filter(n => n.title !== "Sell").map(navItem => (
                 <NavigationMenuItem key={navItem.title}>
                   <NavigationMenuTrigger>
                     {navItem.title}
@@ -69,15 +70,34 @@ export function Header() {
           </Link>
         </div>
         <div className="flex w-full justify-end gap-4">
-          <Button variant="ghost" className="hidden md:inline">
-            Track Order
-          </Button>
+          <ClerkLoaded>
+            <SignedOut>
+              <Link
+                href="/sign-in"
+                className={buttonVariants({ size: "sm", variant: "outline" })}
+              >
+                Sign in
+              </Link>
+            </SignedOut>
+            <SignedIn>
+              <UserButton />
+            </SignedIn>
+          </ClerkLoaded>
+          <ClerkLoading>
+            <Button size="icon" className="size-8" variant="outline">
+              <Loader2 aria-hidden className="size-4 animate-spin" />
+            </Button>
+          </ClerkLoading>
           <div className="hidden border-r md:inline" />
-          <Button variant="outline">Sign in</Button>
-          <Button>
+          <Link
+            href="/onboarding"
+            className={
+              cn(buttonVariants({ size: "sm" }), "hidden md:flex")
+            }
+          >
             <StoreIcon aria-hidden />
             Sell
-          </Button>
+          </Link>
         </div>
         <div className="flex w-12 shrink items-end justify-end lg:hidden">
           <Sheet open={isOpen} onOpenChange={setIsOpen}>

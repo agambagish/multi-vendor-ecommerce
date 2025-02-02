@@ -1,9 +1,10 @@
+import { ClerkProvider } from "@clerk/nextjs";
 import type { Metadata } from "next";
 import { Jost } from "next/font/google";
 
-import { cn } from "@/lib/utils";
-
 import "./globals.css";
+
+import { cn } from "@/lib/utils";
 
 const font = Jost({ subsets: ["latin"] });
 
@@ -14,12 +15,14 @@ export const metadata: Metadata = {
 
 export default function Layout({ children }: React.PropsWithChildren) {
   return (
-    <html lang="en">
-      <body
-        className={cn("antialiased", font.className)}
-      >
-        {children}
-      </body>
-    </html>
+    <ClerkProvider>
+      <html lang="en">
+        <body
+          className={cn("antialiased", font.className)}
+        >
+          {children}
+        </body>
+      </html>
+    </ClerkProvider>
   );
 }
