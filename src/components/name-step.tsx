@@ -1,10 +1,14 @@
 "use client";
 
 import { motion } from "framer-motion";
+import { PlusCircleIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 import Balancer from "react-wrap-balancer";
+import { toast } from "sonner";
 import { z } from "zod";
 
+import { createStore } from "@/actions/create-store";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -16,17 +20,25 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import type { stores } from "@/db/schema";
 import {
   useOnboardingMultiStepForm,
 } from "@/hooks/use-onboarding-multi-step-form";
 import { useZodForm } from "@/hooks/use-zod-form";
 
+import { Spinner } from "./spinner";
+
 const schema = z.object({
   name: z.string().min(3, { message: "It must be atleast 3 character long" }),
 });
 
-export function Name() {
-  const { setName, name } = useOnboardingMultiStepForm();
+interface Props {
+  store: typeof stores.$inferSelect | undefined;
+}
+
+export function Name({ store }: Props) {
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const { name, vpa, setVpa } = useOnboardingMultiStepForm();
 
   const router = useRouter();
   const form = useZodForm({
@@ -36,9 +48,29 @@ export function Name() {
     },
   });
 
-  function onSubmit(values: z.infer<typeof schema>) {
-    setName(values.name);
-    router.push("/onboarding?step=completed");
+  useEffect(() => {
+    if (store?.id) {
+      router.push(`/dashboard/${store.id}`);
+    }
+  });
+
+  async function onSubmit(values: z.infer<typeof schema>) {
+    setIsLoading(true);
+
+    const { data, error } = await createStore({ ...values, vpa });
+
+    if (error) {
+      toast.error("Something went wrong", {
+        description: error,
+      });
+    }
+
+    if (data) {
+      setVpa("");
+      router.push("/onboarding?step=completed");
+    }
+
+    setIsLoading(false);
   }
 
   return (
@@ -98,6 +130,7 @@ export function Name() {
                         autoFocus
                         autoComplete="off"
                         spellCheck="false"
+                        disabled={isLoading}
                         {...field}
                       />
                     </FormControl>
@@ -108,7 +141,16 @@ export function Name() {
                   </FormItem>
                 )}
               />
-              <Button type="submit">Continue</Button>
+              <Button type="submit" disabled={isLoading}>
+                {isLoading
+                  ? (
+                      <Spinner aria-hidden variant="ellipsis" />
+                    )
+                  : (
+                      <PlusCircleIcon aria-hidden />
+                    )}
+                Create
+              </Button>
             </form>
           </Form>
         </motion.div>

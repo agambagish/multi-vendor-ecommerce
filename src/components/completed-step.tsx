@@ -2,12 +2,25 @@
 
 import confetti from "canvas-confetti";
 import { motion } from "framer-motion";
+import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 
-export function Completed() {
+import type { stores } from "@/db/schema";
+
+interface Props {
+  store: typeof stores.$inferSelect | undefined;
+}
+
+export function Completed({ store }: Props) {
+  const router = useRouter();
+
   useEffect(() => {
     const end = Date.now() + 3 * 1000;
-    const colors = ["#a786ff", "#fd8bbc", "#eca184", "#f8deb1"];
+    const colors = [
+      "#00FF7F",
+      "#32CD32",
+      "#00FA9A",
+    ];
 
     const frame = () => {
       if (Date.now() > end)
@@ -35,6 +48,14 @@ export function Completed() {
     };
 
     frame();
+
+    if (store?.id) {
+      const timeoutId = setTimeout(() => {
+        router.push(`/dashboard/${store.id}`);
+      }, 6 * 1000);
+
+      return () => clearTimeout(timeoutId);
+    }
   });
 
   return (
@@ -58,7 +79,7 @@ export function Completed() {
         animate="show"
         className="flex flex-col space-y-4 rounded-xl bg-background/60 p-8"
       >
-        <h1 className="font-cal text-2xl font-bold transition-colors sm:text-3xl">
+        <h1 className="font-cal text-2xl font-extrabold tracking-tight transition-colors sm:text-4xl">
           You are all set!
         </h1>
         <p className="max-w-md text-muted-foreground transition-colors sm:text-lg">

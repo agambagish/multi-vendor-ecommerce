@@ -1,29 +1,42 @@
 "use client";
 
 import { AnimatePresence } from "framer-motion";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useEffect } from "react";
+import { z } from "zod";
+
+import type { stores } from "@/db/schema";
 
 import { Completed } from "./completed-step";
 import { Intro } from "./intro-step";
 import { Name } from "./name-step";
 import { Upi } from "./upi-step";
 
-export function OnboardingMultiStepForm() {
+interface Props {
+  store: typeof stores.$inferSelect | undefined;
+}
+
+export function OnboardingMultiStepForm({ store }: Props) {
   const searchParams = useSearchParams();
+  const router = useRouter();
   const step = searchParams.get("step");
+
+  useEffect(() => {
+    const paramsSchema = z.enum(["upi", "name", "completed"]).nullable();
+    const { error } = paramsSchema.safeParse(step);
+
+    if (error) {
+      router.push("/onboarding?step=upi");
+    }
+  });
 
   return (
     <div className="mx-auto flex h-[calc(100vh-14rem)] w-full max-w-screen-sm flex-col items-center">
       <AnimatePresence mode="wait">
-        {!step && <Intro key="intro" />}
-        {step === "upi" && <Upi />}
-        {step === "name" && <Name />}
-        {step === "completed" && <Completed />}
-        {/* {step === "create-project" && (
-          <CreateProject workspaceId={props.workspaceId} />
-        )}
-        {step === "create-api-key" && <CreateApiKey />}
-        {step === "done" && <Done workspaceId={props.workspaceId} />} */}
+        {!step && <Intro store={store} />}
+        {step === "upi" && <Upi store={store} />}
+        {step === "name" && <Name store={store} />}
+        {step === "completed" && <Completed store={store} />}
       </AnimatePresence>
     </div>
   );

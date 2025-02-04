@@ -2,14 +2,26 @@
 
 import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 import { Balancer } from "react-wrap-balancer";
 
 import { Button } from "@/components/ui/button";
+import type { stores } from "@/db/schema";
 import { useDebounce } from "@/hooks/use-debounce";
 
-export function Intro() {
+interface Props {
+  store: typeof stores.$inferSelect | undefined;
+}
+
+export function Intro({ store }: Props) {
   const router = useRouter();
   const showText = useDebounce(true, 800);
+
+  useEffect(() => {
+    if (store?.id) {
+      router.push(`/dashboard/${store.id}`);
+    }
+  });
 
   return (
     <motion.div

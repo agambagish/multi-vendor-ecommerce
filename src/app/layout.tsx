@@ -4,6 +4,7 @@ import { Jost } from "next/font/google";
 
 import "./globals.css";
 
+import { Toaster } from "@/components/ui/sonner";
 import { cn } from "@/lib/utils";
 
 const font = Jost({ subsets: ["latin"] });
@@ -21,6 +22,11 @@ export default function Layout({ children }: React.PropsWithChildren) {
           className={cn("antialiased", font.className)}
         >
           {children}
+          <Toaster
+            className={font.className}
+            theme="light"
+            richColors
+          />
         </body>
       </html>
     </ClerkProvider>

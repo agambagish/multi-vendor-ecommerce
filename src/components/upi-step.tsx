@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 import Balancer from "react-wrap-balancer";
 import { z } from "zod";
 
@@ -16,6 +17,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import type { stores } from "@/db/schema";
 import {
   useOnboardingMultiStepForm,
 } from "@/hooks/use-onboarding-multi-step-form";
@@ -25,7 +27,11 @@ const schema = z.object({
   vpa: z.string().regex(/^[\w.-]+@[\w.-]+$/, { message: "Invalid UPI ID" }),
 });
 
-export function Upi() {
+interface Props {
+  store: typeof stores.$inferSelect | undefined;
+}
+
+export function Upi({ store }: Props) {
   const { setVpa, vpa } = useOnboardingMultiStepForm();
 
   const router = useRouter();
@@ -34,6 +40,12 @@ export function Upi() {
     defaultValues: {
       vpa,
     },
+  });
+
+  useEffect(() => {
+    if (store?.id) {
+      router.push(`/dashboard/${store.id}`);
+    }
   });
 
   function onSubmit(values: z.infer<typeof schema>) {
