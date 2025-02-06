@@ -14,3 +14,7 @@ export function getUserEmail(user: User | null) {
 
   return email;
 }
+
+export function delay(ms: number) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}

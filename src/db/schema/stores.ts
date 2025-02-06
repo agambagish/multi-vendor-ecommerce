@@ -1,7 +1,7 @@
-import { pgTable, text, uuid } from "drizzle-orm/pg-core";
+import { pgTable, text } from "drizzle-orm/pg-core";
 
 export const stores = pgTable("stores", {
-  id: uuid().defaultRandom(),
+  id: text().$defaultFn(() => crypto.randomUUID()).primaryKey(),
   name: text().notNull(),
   ownerId: text().notNull().unique(),
   email: text().notNull().unique(),

@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion";
 import { PlusCircleIcon } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { notFound, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import Balancer from "react-wrap-balancer";
 import { toast } from "sonner";
@@ -50,7 +50,7 @@ export function Name({ store }: Props) {
 
   useEffect(() => {
     if (store?.id) {
-      router.push(`/dashboard/${store.id}`);
+      notFound();
     }
   });
 

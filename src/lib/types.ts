@@ -1,3 +1,5 @@
+import type { LucideIcon } from "lucide-react";
+
 export interface NavItem {
   title: string;
   href: string;
@@ -20,4 +22,12 @@ export interface CarouselItem {
   buttonLink: string;
   image: string;
   credit: string;
+}
+
+export interface DashboardSidebarItem {
+  title: string;
+  href: string;
+  icon: LucideIcon;
+  defaultOpen?: boolean;
+  subItems?: DashboardSidebarItem[];
 }

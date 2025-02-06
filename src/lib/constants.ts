@@ -1,4 +1,10 @@
-import type { CarouselItem, NavItem } from "@/lib/types";
+import {
+  LayoutDashboardIcon,
+  PackageIcon,
+  UserSquare2Icon,
+} from "lucide-react";
+
+import type { CarouselItem, DashboardSidebarItem, NavItem } from "@/lib/types";
 
 export const NAV_ITEMS: NavItem[] = [
   {
@@ -91,3 +97,25 @@ export const CAROUSEL_ITEMS: CarouselItem[] = [
     credit: "Square on Unsplash",
   },
 ];
+
+export function getDashboardSidebarItems(
+  userId: string | undefined,
+): DashboardSidebarItem[] {
+  return [
+    {
+      title: "Dashboard",
+      href: `/dashboard/${userId}`,
+      icon: LayoutDashboardIcon,
+    },
+    {
+      title: "Products",
+      href: `/dashboard/${userId}/products`,
+      icon: PackageIcon,
+    },
+    {
+      title: "Customers",
+      href: "#",
+      icon: UserSquare2Icon,
+    },
+  ];
+}

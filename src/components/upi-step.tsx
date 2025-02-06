@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { useRouter } from "next/navigation";
+import { notFound, useRouter } from "next/navigation";
 import { useEffect } from "react";
 import Balancer from "react-wrap-balancer";
 import { z } from "zod";
@@ -44,7 +44,7 @@ export function Upi({ store }: Props) {
 
   useEffect(() => {
     if (store?.id) {
-      router.push(`/dashboard/${store.id}`);
+      notFound();
     }
   });
 
